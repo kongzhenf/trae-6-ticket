@@ -1,13 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 # build-vercel.sh: 把 admin + h5 两个 SPA 合并成 Vercel 可部署的单一 output
 # 布局：
 #   .vercel/output/                ← h5（部署在根 /）
 #   .vercel/output/admin/          ← admin（部署在 /admin/*）
 #
 # 调用：
-#   bash scripts/build-vercel.sh
+#   sh scripts/build-vercel.sh    （POSIX sh，兼容 Vercel 镜像）
 #
-# 前置：必须先 bash scripts/build.sh 跑过一次（确保 packages/shared、packages/api 已构建）
+# 注意：用 sh 而非 bash，确保在 alpine / distroless 等最小镜像里也能跑
 set -e
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TSC="$ROOT_DIR/node_modules/.bin/tsc"
@@ -34,11 +34,9 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 cp -R "$ROOT_DIR/apps/h5/dist/." "$OUT/"
 
-# 同步处理 admin：先临时改写 index.html 里的 <link href="/assets"> → /admin/assets（因为 react-vant 等包可能未走 vite base）
 mkdir -p "$OUT/admin"
 cp -R "$ROOT_DIR/apps/admin/dist/." "$OUT/admin/"
 
-# 安全防护：移除调试产物
 if [ -f "$OUT/iphone17pro-demo.html" ]; then
   rm -f "$OUT/iphone17pro-demo.html"
   echo "==> 已移除调试产物 iphone17pro-demo.html"
