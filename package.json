@@ -14,7 +14,6 @@
   "scripts": {
     "dev": "bash scripts/dev.sh",
     "build": "bash scripts/build.sh",
-    "build:vercel": "node scripts/build-vercel.mjs",
     "typecheck": "bash scripts/typecheck.sh",
     "lint": "bash scripts/lint.sh",
     "format": "bash scripts/format.sh",
