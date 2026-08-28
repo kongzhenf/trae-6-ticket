@@ -1,0 +1,39 @@
+{
+  "name": "@trae/admin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "app:build": "tsc -b --noEmit && vite build",
+    "app:preview": "vite preview",
+    "app:lint": "eslint . --max-warnings=0",
+    "app:typecheck": "tsc -b --pretty"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.3.2",
+    "@trae/api": "*",
+    "@trae/shared": "*",
+    "antd": "^6.6.1",
+    "axios": "^1.7.7",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.1.0",
+    "react-router-dom": "^7.18.2",
+    "remark-gfm": "^4.0.1",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react-swc": "^3.7.1",
+    "concurrently": "^9.2.4",
+    "rimraf": "^6.1.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^7.0.0"
+  }
+}

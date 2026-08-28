@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>演唱会票务 H5 · iPhone 17 Pro 演示</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --scale: 1;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+          'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background: radial-gradient(circle at 30% 20%, #2a2d34 0%, #0f1115 70%);
+        color: #e5e7eb;
+      }
+
+      .stage {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 14px 16px;
+        min-height: 0;
+      }
+
+      .stage__header {
+        text-align: center;
+        flex: 0 0 auto;
+      }
+      .stage__title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        color: #f3f4f6;
+      }
+      .stage__subtitle {
+        font-size: 11px;
+        margin: 0;
+        color: #9ca3af;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+        flex: 0 0 auto;
+        max-width: 720px;
+      }
+      .toolbar a {
+        font-size: 11px;
+        color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        padding: 4px 10px;
+        text-decoration: none;
+        transition: background 0.15s;
+      }
+      .toolbar a:hover { background: rgba(255, 255, 255, 0.16); }
+      .toolbar a.active {
+        background: #1677ff;
+        border-color: #1677ff;
+        color: #fff;
+      }
+
+      /* iPhone 17 Pro 设计尺寸（CSS px 逻辑）：
+         屏幕 402 × 874，含外壳 padding 后的可视外框 ≈ 438 × 910 */
+      .device-frame {
+        flex: 0 1 auto;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .device {
+        /* 通过 JS 直接设 width/height（按 fit() 计算的 scale 缩放后的尺寸），
+           而不是用 CSS transform——因为 transform 不会改变 layout 尺寸，
+           会导致文档流总高度超过视口。 */
+        background: linear-gradient(135deg, #4a4f57 0%, #2b2e35 100%);
+        border-radius: 64px;
+        padding: 18px;
+        box-shadow:
+          0 0 0 2px #1a1c20,
+          0 30px 60px rgba(0, 0, 0, 0.55),
+          0 0 0 6px #1f2227;
+        position: relative;
+        flex: 0 0 auto;
+      }
+      .device::before {
+        content: '';
+        position: absolute;
+        background: #1a1c20;
+        border-radius: 2px;
+        left: -3px;
+        top: calc(220px * var(--scale));
+        width: calc(3px * var(--scale));
+        height: calc(28px * var(--scale));
+      }
+      .device::after {
+        content: '';
+        position: absolute;
+        background: #1a1c20;
+        border-radius: 2px;
+        left: -3px;
+        top: calc(280px * var(--scale));
+        width: calc(3px * var(--scale));
+        height: calc(56px * var(--scale));
+        box-shadow:
+          0 calc(60px * var(--scale)) 0 #1a1c20,
+          0 calc(90px * var(--scale)) 0 #1a1c20;
+      }
+      .device .power {
+        position: absolute;
+        right: -3px;
+        top: calc(320px * var(--scale));
+        width: calc(3px * var(--scale));
+        height: calc(80px * var(--scale));
+        background: #1a1c20;
+        border-radius: 2px;
+      }
+
+      .device__screen {
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        border-radius: calc(48px * var(--scale));
+        overflow: hidden;
+        position: relative;
+      }
+      .device__screen::before {
+        content: '';
+        position: absolute;
+        top: calc(12px * var(--scale));
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(110px * var(--scale));
+        height: calc(32px * var(--scale));
+        background: #000;
+        border-radius: 20px;
+        z-index: 2;
+      }
+      .device__screen iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #fff;
+      }
+
+      .footnote {
+        font-size: 10px;
+        color: #6b7280;
+        text-align: center;
+        max-width: 640px;
+        line-height: 1.5;
+        flex: 0 0 auto;
+        margin: 0;
+      }
+
+      /* 超窄屏幕下进一步压缩字号 */
+      @media (max-width: 520px) {
+        .stage { padding: 8px 8px; gap: 8px; }
+        .stage__title { font-size: 14px; }
+        .toolbar a { padding: 3px 8px; font-size: 10px; }
+      }
+      @media (max-height: 600px) {
+        .stage__title { font-size: 13px; margin: 0; }
+        .stage__subtitle { display: none; }
+        .toolbar { gap: 4px; }
+        .toolbar a { padding: 2px 8px; }
+        .footnote { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <header class="stage__header">
+        <h1 class="stage__title">演唱会票务 · iPhone 17 Pro 视口演示</h1>
+        <p class="stage__subtitle">
+          6.3 英寸 OLED · 逻辑分辨率 402 × 874 CSS px · DPR = 3 · 19.5 : 9
+        </p>
+      </header>
+
+      <nav class="toolbar" id="toolbar">
+        <a href="?p=/" data-route="/">首页</a>
+        <a href="?p=/login" data-route="/login">登录</a>
+        <a href="?p=/concerts/123" data-route="/concerts/123">演出详情</a>
+        <a href="?p=/concerts/123/tickets" data-route="/concerts/123/tickets">票档选择</a>
+        <a href="?p=/orders/create" data-route="/orders/create">下单</a>
+        <a href="?p=/orders/abc" data-route="/orders/abc">订单详情</a>
+        <a href="?p=/profile" data-route="/profile">个人中心</a>
+      </nav>
+
+      <div class="device-frame">
+        <div class="device" aria-label="iPhone 17 Pro 模拟">
+          <div class="power"></div>
+          <div class="device__screen">
+            <iframe id="frame" title="H5 演示" src="/"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <p class="footnote">
+        iPhone 17 Pro 视口演示页面。手机壳尺寸按真实 1.5× 缩放，内部 iframe 以 402×874 CSS px 渲染 H5。
+      </p>
+    </div>
+
+    <script>
+      // JS 动态算缩放比，让 device 始终贴合可视区高度（一屏内）。
+      // 直接改 device 的 width/height，而不是 CSS transform——
+      // 因为 transform 不影响 layout 尺寸，会让 flex 容器把它按原尺寸布局，
+      // 导致文档流总高度超过视口。
+      const device = document.querySelector('.device');
+      const DESIGN_W = 438;
+      const DESIGN_H = 910;
+
+      function fit() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        // 高度留给 device-frame 之外的其他内容（标题/工具栏/脚注/padding）
+        const otherHeight = vh - 180;
+        const maxW = vw - 32;
+        const maxH = otherHeight;
+        const scaleW = maxW / DESIGN_W;
+        const scaleH = maxH / DESIGN_H;
+        const scale = Math.min(1, scaleW, scaleH);
+        document.documentElement.style.setProperty('--scale', scale.toFixed(4));
+        device.style.width = (DESIGN_W * scale) + 'px';
+        device.style.height = (DESIGN_H * scale) + 'px';
+        device.style.padding = (18 * scale) + 'px';
+        device.style.borderRadius = (64 * scale) + 'px';
+      }
+      fit();
+      window.addEventListener('resize', fit);
+    </script>
+    <script>
+      const frame = document.getElementById('frame');
+      const params = new URLSearchParams(location.search);
+      const initial = params.get('p') || '/';
+      frame.src = initial;
+      const links = document.querySelectorAll('#toolbar a');
+      function highlight(route) {
+        links.forEach((a) => {
+          a.classList.toggle('active', a.dataset.route === route);
+        });
+      }
+      highlight(initial);
+      links.forEach((a) => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const route = a.dataset.route;
+          frame.src = route;
+          history.replaceState(null, '', '?p=' + encodeURIComponent(route));
+          highlight(route);
+        });
+      });
+    </script>
+  </body>
+</html>

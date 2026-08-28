@@ -1,0 +1,28 @@
+# vercelignore：Vercel 部署时排除的内容
+node_modules
+.git
+.gitignore
+.DS_Store
+
+# 开发产物（由 build-vercel.sh 重新生成）
+apps/*/dist
+packages/*/dist
+.vercel/output
+
+# 编辑器 / 系统
+.vscode
+.idea
+*.log
+*.tmp
+
+# 文档（不入部署包）
+README.md
+AGENTS.md
+
+# 测试 / 调试
+__tests__
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
