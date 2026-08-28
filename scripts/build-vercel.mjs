@@ -65,11 +65,9 @@ step('[2/5] build @trae/api')
 run(`"${TSUP}"`, apiDir)
 
 step('[3/5] build @trae/h5（base = /）')
-run(`"${TSC}" -b --noEmit`, h5Dir)
 run(`"${VITE}" build`, h5Dir)
 
 step('[4/5] build @trae/admin（base = /admin/）')
-run(`"${TSC}" -b --noEmit`, adminDir)
 run(`"${VITE}" build`, adminDir, { VITE_PUBLIC_BASE: '/admin/' })
 
 step('[5/5] 合并到 .vercel/output')
